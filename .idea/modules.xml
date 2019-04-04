@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/yali-pom.iml" filepath="$PROJECT_DIR$/yali-pom.iml" />
+      <module fileurl="file://$PROJECT_DIR$/yali-redis/yali-redis.iml" filepath="$PROJECT_DIR$/yali-redis/yali-redis.iml" />
+    </modules>
+  </component>
+</project>
