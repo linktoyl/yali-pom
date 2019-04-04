@@ -37,6 +37,12 @@ public class SingleRedis implements RedisClient {
         return false;
     }
 
+    @Override
+    public boolean del(String key) {
+        Jedis jedis = jedisPool.getResource();
+        return jedis.del(key) > 0;
+    }
+
     public boolean set(final String key, final String value) {
         Jedis jedis = jedisPool.getResource();
         String reply = jedis.set(key, value);

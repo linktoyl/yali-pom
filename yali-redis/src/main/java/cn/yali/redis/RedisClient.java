@@ -12,6 +12,8 @@ public interface RedisClient {
 
     boolean connect(RedisConnectConfig config);
 
+    boolean del(final String key);
+
     boolean set(final String key, final String value);
     boolean set(final String key, final Object value);
     boolean set(final String key, final List value);

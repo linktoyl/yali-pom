@@ -41,6 +41,11 @@ public class ClusterRedis implements RedisClient {
         return false;
     }
 
+    @Override
+    public boolean del(String key) {
+        return false;
+    }
+
     public boolean set(String key, String value) {
         return false;
     }
