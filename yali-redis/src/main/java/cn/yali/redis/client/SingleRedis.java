@@ -11,6 +11,7 @@ import redis.clients.jedis.JedisPoolConfig;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 单点Redis操作客户端.
@@ -40,12 +41,15 @@ public class SingleRedis implements RedisClient {
     @Override
     public boolean del(String key) {
         Jedis jedis = jedisPool.getResource();
-        return jedis.del(key) > 0;
+        boolean flag = jedis.del(key) > 0;
+        jedis.close();
+        return flag;
     }
 
     public boolean set(final String key, final String value) {
         Jedis jedis = jedisPool.getResource();
         String reply = jedis.set(key, value);
+        jedis.close();
         return RedisReply.OK.equals(reply);
     }
 
@@ -53,6 +57,7 @@ public class SingleRedis implements RedisClient {
         Jedis jedis = jedisPool.getResource();
         try {
             String reply = jedis.set(key.getBytes("utf-8"), SerializeUtil.serialize(value));
+            jedis.close();
             return RedisReply.OK.equals(reply);
         } catch (UnsupportedEncodingException e) {
             return false;
@@ -65,57 +70,82 @@ public class SingleRedis implements RedisClient {
         for (Object obj:value) {
             aLong = jedis.lpush(key, obj.toString());
         }
+        jedis.close();
         return aLong>-1;
     }
 
     public boolean set(String key, Map value) {
         Jedis jedis = jedisPool.getResource();
         String reply = jedis.hmset(key, value);
+        jedis.close();
         return RedisReply.OK.equals(reply);
     }
 
     @Override
     public boolean sadd(String key, String value) {
         Jedis jedis = jedisPool.getResource();
-        return jedis.sadd(key, value)>0;
+        boolean flag = jedis.sadd(key, value)>0;
+        jedis.close();
+        return flag;
     }
 
     @Override
     public boolean sismember(String key, String value) {
         Jedis jedis = jedisPool.getResource();
-        return jedis.sismember(key, value);
+        boolean flag = jedis.sismember(key, value);
+        jedis.close();
+        return flag;
     }
 
     @Override
     public boolean srem(String key, String value) {
         Jedis jedis = jedisPool.getResource();
-        return jedis.srem(key, value)>0;
+        boolean flag = jedis.srem(key, value)>0;
+        jedis.close();
+        return flag;
+    }
+
+    @Override
+    public Set<String> smembers(String key) {
+        Jedis jedis = jedisPool.getResource();
+        Set<String> strs = jedis.smembers(key);
+        jedis.close();
+        return strs;
     }
 
     public Long expire(String key, int expires) {
         Jedis jedis = jedisPool.getResource();
-        return jedis.expire(key, expires);
+        Long l = jedis.expire(key, expires);
+        jedis.close();
+        return l;
     }
 
     public String getString(String key) {
         Jedis jedis = jedisPool.getResource();
-        return jedis.get(key);
+        String str = jedis.get(key);
+        jedis.close();
+        return str;
     }
 
     public Map getMap(String key) {
         Jedis jedis = jedisPool.getResource();
-        return jedis.hgetAll(key);
+        Map map = jedis.hgetAll(key);
+        jedis.close();
+        return map;
     }
 
     public List getList(String key) {
         Jedis jedis = jedisPool.getResource();
-        return jedis.lrange(key, 0, -1);
+        List list = jedis.lrange(key, 0, -1);
+        jedis.close();
+        return list;
     }
 
     public <T> T getObject(String key, Class<T> clazz) {
         Jedis jedis = jedisPool.getResource();
         try {
             byte[] reply = jedis.get(key.getBytes("utf-8"));
+            jedis.close();
             Object obj = SerializeUtil.unserialize(reply);
             return clazz.cast(obj);
         } catch (UnsupportedEncodingException e) {

@@ -4,6 +4,7 @@ import cn.yali.redis.config.RedisConnectConfig;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * redis 操作接口
@@ -22,6 +23,7 @@ public interface RedisClient {
     boolean sadd(final String key, final String value);
     boolean sismember(final String key, final String value);
     boolean srem(final String key, final String value);
+    Set<String> smembers(final String key);
 
     Long expire(final String key, final int expires);
 

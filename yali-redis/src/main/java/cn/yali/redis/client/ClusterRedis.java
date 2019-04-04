@@ -77,6 +77,11 @@ public class ClusterRedis implements RedisClient {
         return false;
     }
 
+    @Override
+    public Set<String> smembers(String key) {
+        return null;
+    }
+
     public Long expire(String key, int expires) {
         return 0L;
     }
